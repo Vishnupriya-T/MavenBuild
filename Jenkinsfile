@@ -21,9 +21,10 @@ pipeline {
         }
         stage('Upload') {
             steps {
-                    rtUpload (
-                    serverId: 'central', // Obtain an Artifactory server instance, defined in Jenkins --> Manage:
-                    spec: """{
+                   rtUpload (
+                   //script {
+                    serverId:'central', // Obtain an Artifactory server instance, defined in Jenkins --> Manage:
+                    spec:"""{
                             "files": [
                                 {
                                     "pattern": "/var/lib/jenkins/workspace/MavenBuild_SCM/target/*.jar",
@@ -34,18 +35,19 @@ pipeline {
                     buildName: 'MavenBuild',
                     buildNumber: '1',
                     failNoOp: true    // Fails the build case if no file is uploaded
-                    )
+                    //server.upload(uploadSpec)
+                   //}
+                   )
             }
         }
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
-                    serverId: central,
+                    serverId: 'central',
                     buildName: 'MavenBuild',
                     buildNumber: '1'
                 )
             }
         }
     }
-}
 }
