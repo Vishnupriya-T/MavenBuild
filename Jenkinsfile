@@ -22,7 +22,6 @@ pipeline {
              }
         }
         stage('Upload') {
-            if env.BRANCH_NAME == "production" {
             steps {
                    script {
                     def server= Artifactory.server "central"
@@ -38,7 +37,6 @@ pipeline {
                     server.upload(uploadSpec)
                     server.publishBuildInfo buildInfo
                    }
-            }
             }
         }
     }
