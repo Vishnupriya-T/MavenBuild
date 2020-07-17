@@ -4,39 +4,48 @@ pipeline {
     tools {
         maven "maven"
     }
-    /*environment{
-        
-    }*/
 
     stages {
         stage('Clone') {
             steps {
                 git credentialsId: 'a6257a11-8f87-4b2c-ad76-f30ea0df8df4',
-                url: 'https://github.com/Vishnupriya1032/MavenBuild.git'
+                    url: 'https://github.com/Vishnupriya1032/MavenBuild.git'
+                    //branch: master
             }
         }
          stage('Build') {
              steps{
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
-                sh "echo $environment"
              }
         }
         stage('Upload') {
             steps {
-                   script {
-                    def server= Artifactory.server "central"
-                    def buildInfo = Artifactory.newBuildInfo()
-                    def uploadSpec="""{
+                   rtUpload (
+                   //script {
+                    serverId:'central', // Obtain an Artifactory server instance, defined in Jenkins --> Manage:
+                    spec:"""{
                             "files": [
                                 {
-                                    "pattern": "/var/lib/jenkins/workspace/MavenBuild2/target/*.jar",
+                                    "pattern": "/var/lib/jenkins/workspace/MavenBuild_SCM/target/*.jar",
                                     "target": "Sample/"
                                 }
                             ]
-                    }"""
-                    server.upload(uploadSpec)
-                    server.publishBuildInfo buildInfo
-                   }
+                    }""",
+                    buildName: 'MavenBuild',
+                    buildNumber: '1',
+                    failNoOp: true    // Fails the build case if no file is uploaded
+                    //server.upload(uploadSpec)
+                   //}
+                   )
+            }
+        }
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: 'central',
+                    buildName: 'MavenBuild',
+                    buildNumber: '1'
+                )
             }
         }
     }
