@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Upload') {
             when {
-                anyOf { branch 'production'; branch 'development' }
+                 branch 'production'
             }
             steps {
                    script {
