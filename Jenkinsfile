@@ -8,9 +8,9 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git credentialsId: 'a6257a11-8f87-4b2c-ad76-f30ea0df8df4',
-                    url: 'https://github.com/Vishnupriya1032/MavenBuild.git'
-                    //branch: master
+                //git credentialsId: 'a6257a11-8f87-4b2c-ad76-f30ea0df8df4',
+                //url: 'https://github.com/Vishnupriya1032/MavenBuild.git'
+                checkout scm
             }
         }
          stage('Build') {
